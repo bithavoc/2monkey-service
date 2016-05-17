@@ -1,0 +1,720 @@
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: 2monkey
+  description: |
+    API for 2monkey
+    https://swaggerhub.com/api/robinsound/2monkey/0.0.1
+schemes:
+  - http
+host: 'loclahost:3000'
+basePath: /v0
+produces:
+  - application/json
+paths:
+  /vaults:
+    x-swagger-router-controller: Vaults
+    post:
+      operationId: postVaults
+      tags:
+        - Vault
+      summary: |
+        Creates a new Vault
+      description: |
+        POST /vaults
+      parameters:
+        - name: VaultCreationParameters
+          in: body
+          description: Vault name
+          required: true
+          schema:
+            $ref: '#/definitions/VaultCreationRequest'
+      responses:
+        201:
+          description: ok response
+          schema:
+            $ref: '#/definitions/VaultResponse'
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /vaults/{vaultName}:
+    x-swagger-router-controller: Vault
+    head:
+      operationId: headVault
+      tags:
+        - Vault
+      summary: |
+        Check for a Vault
+      description: |
+        HEAD /vaults/{vaultName}
+      parameters:
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+      responses:
+        204:
+          description: ok response no content
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      operationId: getVault
+      tags:
+        - Vault
+      summary: |
+        Get a Vault
+      description: |
+        GET /vaults/{vaultName}
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+      responses:
+        200:
+          description: ok response
+          schema:
+            $ref: '#/definitions/OpenVaultResponse'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      operationId: deleteVault
+      tags:
+        - Vault
+      summary: |
+        Delete a Vault
+      description: |
+        DELETE /vaults/{vaultName}
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+      responses:
+        204:
+          description: ok, DELETED, no content
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /vaults/{vaultName}/documents:
+    x-swagger-router-controller: Documents
+    post:
+      operationId: postDocument
+      tags:
+        - Document
+      summary: |
+        Creates a document
+      description: |
+        POST /vaults/{vaultName}/documents
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: document
+          in: body
+          description: Document
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentRequest'
+      responses:
+        201:
+          description: ok response
+          schema:
+            $ref: '#/definitions/DocumentResponse'
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: Vault Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      operationId: getDocuments
+      tags:
+        - Document
+      summary: |
+        Get a list of document
+      description: |
+        GET /vaults/{vaultName}/documents
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+      responses:
+        200:
+          description: ok response
+          schema:
+            $ref: '#/definitions/DocumentsResponse'
+        404:
+          description: Vault Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /vaults/{vaultName}/documents/{documentId}:
+    x-swagger-router-controller: Document
+    get:
+      operationId: getDocument
+      tags:
+        - Document
+      summary: |
+        Get a document by Id
+      description: |
+        GET /vaults/{vaultName}/documents/{documentId}
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: documentId
+          in: path
+          description: Document id
+          required: true
+          type: number
+          format: int64
+      responses:
+        200:
+          description: ok response
+          schema:
+            $ref: '#/definitions/DocumentResponse'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      operationId: deleteDocument
+      tags:
+        - Document
+      summary: |
+        Delete a Document
+      description: |
+        GET /vaults/{vaultName}/documents/{documentId}
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: documentId
+          in: path
+          description: Document id
+          required: true
+          type: number
+          format: int64
+      responses:
+        204:
+          description: ok, DELETED, no content
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      operationId: updateDocument
+      tags:
+        - Document
+      summary: |
+        Update a document
+      description: |
+        PUT /vaults/{vaultName}/documents
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: documentId
+          in: path
+          description: Document id
+          required: true
+          type: number
+          format: int64
+        - name: document
+          in: body
+          description: Document
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentRequest'
+      responses:
+        200:
+          description: ok response
+          schema:
+            $ref: '#/definitions/DocumentResponse'
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: Vault Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /vaults/{vaultName}/documents/{documentId}/attachments/{attachmentId}:
+    x-swagger-router-controller: Attachment
+    delete:
+      operationId: deleteAttachment
+      tags:
+        - Attachment
+      summary: |
+        Delete a Attachment
+      description: |
+        GET /vaults/{vaultName}/documents/{documentId}/attachments/{attachmentId}
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: documentId
+          in: path
+          description: Document id
+          required: true
+          type: number
+          format: int64
+        - name: attachmentId
+          in: path
+          description: attachment id
+          required: true
+          type: number
+          format: int64
+      responses:
+        204:
+          description: ok, DELETED, no content
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /vaults/{vaultName}/documents/{documentId}/attachments:
+    x-swagger-router-controller: Attachment
+    post:
+      operationId: postAttachment
+      tags:
+        - Attachment
+      summary: |
+        Creates a attachment
+      description: |
+        POST /vaults/{vaultName}/documents/{documentId}/attachments
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer vaultPassword
+          required: true
+          type: string
+        - name: vaultName
+          in: path
+          description: Vault name
+          required: true
+          type: string
+        - name: documentId
+          in: path
+          description: Document id
+          required: true
+          type: number
+          format: int64
+        - name: file
+          in: formData
+          description: Attachment file
+          required: true
+          type: file
+        - name: kind
+          in: formData
+          description: kind of attachment
+          required: true
+          type: string
+          enum:
+            - picture
+            - video
+            - audio
+      responses:
+        201:
+          description: ok response uploaded
+          schema:
+            $ref: '#/definitions/AttachmentResponse'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+definitions:
+  ErrorResponse:
+    properties:
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - messages
+  VaultCreationRequest:
+    type: object
+    description: Represent a Vault Creation request
+    properties:
+      name:
+        type: string
+        description: New Vault name
+      password:
+        type: string
+        description: New Vault password
+        format: base64
+    required:
+      - name
+      - password
+  VaultResponse:
+    type: object
+    description: Represent a Vault response
+    properties:
+      vault:
+        $ref: '#/definitions/Vault'
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - vault
+      - messages
+  OpenVaultResponse:
+    type: object
+    description: Represent a Vault response
+    properties:
+      vault:
+        $ref: '#/definitions/Vault'
+      token:
+        type: string
+        description: session valid token
+        format: base64
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - vault
+      - messages
+      - token
+  Vault:
+    type: object
+    description: Represent a Vault
+    properties:
+      id:
+        type: number
+        format: int64
+        description: Vault id
+      name:
+        type: string
+        description: Vault name
+      created:
+        type: number
+        format: int64
+        description: Vault creation epoch
+    required:
+      - id
+      - name
+      - created
+  Document:
+    type: object
+    description: Represent a Document
+    properties:
+      id:
+        type: number
+        format: int64
+        description: Document id
+      body:
+        type: string
+        description: Document body
+      title:
+        type: string
+        description: Document title
+      modified:
+        type: number
+        format: int64
+        description: Document last modification epoch
+      created:
+        type: number
+        format: int64
+        description: Document creation epoch
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+  Attachment:
+    type: object
+    description: Represent a Document attachment
+    properties:
+      id:
+        type: number
+        format: int64
+        description: Attachment id
+      kind:
+        type: string
+        description: Message kind
+        enum:
+          - picture
+          - video
+          - audio
+      urls:
+        type: array
+        description: Attachment urls
+        items:
+          $ref: '#/definitions/AttachmentUrl'
+    required:
+      - id
+      - kind
+      - urls
+  AttachmentUrl:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Url name. original | thumb
+      url:
+        type: string
+        description: Actual Url
+    required:
+      - name
+      - url
+  AttachmentResponse:
+    type: object
+    description: Represent a attachment response
+    properties:
+      attachment:
+        $ref: '#/definitions/Attachment'
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - attachment
+      - messages
+  DocumentRequest:
+    type: object
+    description: Represent a Document request
+    properties:
+      title:
+        type: string
+        description: Document title
+      body:
+        type: string
+        description: Document text body
+    required:
+      - title
+      - body
+  DocumentsResponse:
+    type: object
+    description: Represent a Array of Documents response
+    properties:
+      documents:
+        type: array
+        description: Document array
+        items:
+          $ref: '#/definitions/Document'
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - documents
+      - messages
+  DocumentResponse:
+    type: object
+    description: Represent a Document response
+    properties:
+      document:
+        $ref: '#/definitions/Document'
+      messages:
+        type: array
+        description: Message Array
+        items:
+          $ref: '#/definitions/Message'
+    required:
+      - document
+      - messages
+  Message:
+    properties:
+      path:
+        type: string
+        description: Object path
+      message:
+        type: string
+        description: Messsage text
+      kind:
+        type: string
+        description: Message kind
+        enum:
+          - error
+          - warn
+          - info
+    required:
+      - path
+      - message
+      - kind
