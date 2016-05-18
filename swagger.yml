@@ -7,7 +7,7 @@ info:
     https://swaggerhub.com/api/robinsound/2monkey/0.0.1
 schemes:
   - http
-host: 'loclahost:3000'
+host: 'localhost:3000'
 basePath: /v0
 produces:
   - application/json
@@ -81,7 +81,7 @@ paths:
         - name: Authorization
           in: header
           description: Bearer vaultPassword
-          required: true
+          required: false
           type: string
         - name: vaultName
           in: path
